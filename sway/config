@@ -1,234 +1,185 @@
-# Read `man 5 sway` for a complete reference.
+# General
 
-## Modifier key
-# Mod1 for Alt
-# Mod4 for Super
-
+## Modifier variable
+### Mod1 = Alt, Mod4 = Super
 set $mod Mod4
 
-set $left h
-set $down j
-set $up k
+## Associations
+set $terminal foot
+set $explorer ranger
+set $monitor btop
+
+set $shoot grim
+set $selector slurp
+
+## Association wrappers
+
+set $wrap-terminal foot -e
+set $wrap-shoot grim -t png
+
+set $shoot-home ~/.local/share/Pictures/Screenshots
+
+## Variables for workspace names
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+## Color presets
+set $cyan "#7bafd4"
+set $blue "#435072"
+set $black "#282828"
+
+## System font
+font Noto Sans Mono 11
+
+## Your outputs here
+set $output-1 "Unknown 2460G5 0x00002871"
+
+# Workspace bindings
+
+## Mouse+$floating_modifier to drag floating windows
+floating_modifier $mod
+
+set $up i
+set $down k
+set $left j
 set $right l
 
-set $term foot
-set $runterm exec $term -e
-
-set $explorer $runterm "ranger"
-set $monitor $runterm btop
-
-# Your preferred application launcher
-# Note: pass the final command to swaymsg so that the resulting window can be opened
-# on the original workspace that the command was run on.
-set $menu bemenu-run | xargs swaymsg exec --
-
-### Output configuration
-#
-set $output1 'Unknown 2460G5 0x00002871'
-set $wallpaper ~/phoneimages/20220124_145757.png
-
-output $output1 {
-	bg $wallpaper fill
-	transform normal
-	position 0,0
-	resolution 1920x1080@75Hz
-	adaptive_sync off
-	# max_render_time off
+## Move focused window
+bindsym --to-code {
+	$mod+$left	focus left
+	$mod+$down 	focus down
+	$mod+$up   	focus up
+	$mod+$right	focus right
 }
 
-# 'man 5 sway-output'
+## Move between windows
+bindsym --to-code {
+	$mod+1 workspace number $ws1
+    	$mod+2 workspace number $ws2
+    	$mod+3 workspace number $ws3
+    	$mod+4 workspace number $ws4
+    	$mod+5 workspace number $ws5
+    	$mod+6 workspace number $ws6
+    	$mod+7 workspace number $ws7
+    	$mod+8 workspace number $ws8
+    	$mod+9 workspace number $ws9
+    	$mod+0 workspace number $ws10
+}
 
-### Input configuration
-#
+## Move windows to workspaces
+bindsym --to-code {
+    $mod+Shift+1 move container to workspace number $ws1
+    $mod+Shift+2 move container to workspace number $ws2
+    $mod+Shift+3 move container to workspace number $ws3
+    $mod+Shift+4 move container to workspace number $ws4
+    $mod+Shift+5 move container to workspace number $ws5
+    $mod+Shift+6 move container to workspace number $ws6
+    $mod+Shift+7 move container to workspace number $ws7
+    $mod+Shift+8 move container to workspace number $ws8
+    $mod+Shift+9 move container to workspace number $ws9
+    $mod+Shift+0 move container to workspace number $ws10
+}
+
+## Split next program
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+## Go in/out of fullscreen
+bindsym $mod+f fullscreen toggle
+
+## Change focus between tiling / floating windows
+bindsym $mod+Shift+f focus mode_toggle
+
+## Focus parent window
+bindsym $mod+a focus parent
+
+## Toggle layouts - uncommented because they get in my way
+#bindsym $mod+s layout stacking
+#bindsym $mod+w layout tabbed
+#bindsym $mod+e layout toggle split
+
+# Program Bindings
+
+## Control programs
+bindsym $mod+Shift+q kill
+
+## Open some programs
+bindsym $mod+Return exec $terminal
+bindsym $mod+x exec $wrap-terminal $explorer
+bindsym $mod+b exec $wrap-terminal $monitor
+
+bindsym $mod+d exec bemenu-run | xargs swaymsg exec --
+
+## Handle screenshots
+bindsym Print			exec $wrap-shoot -g "$($selector)" - | wl-copy
+bindsym $mod+Shift+Print	exec $wrap-shoot -g "$($selector)"
+bindsym $mod+Print		exec $wrap-shoot
+
+# Visuals
+
+default_border pixel 2
+default_floating_border pixel 2
+gaps outer 2
+
+## max_render_time (from `man 5 sway`):
+
+## When set to off, the relevant application is told to render this window immediately after display refresh. How much time is left for rendering before sway composites the output at that point depends on the output max_render_time setting.
+##
+## To set this up for optimal latency:
+## 1.Set up output max_render_time (see sway-output(5)).
+## 2.Put the target application in full-screen and have it continuously render something.
+## 3.Start by setting max_render_time 1. If the application drops frames, increment by 1.
+##
+## This setting only has an effect if a per-output max_render_time is in effect on the output the window is currently on.
+
+# Input
+
 input "type:pointer" {
 	accel_profile flat
 	pointer_accel 0.15
 }
 
-# `man 5 sway-input`
+input "type:keyboard" {
+	repeat_delay 200
+	repeat_rate 30
 
-### Key bindings
-#
-# Basics:
-#
-    # Start a terminal
-    bindsym $mod+Return exec $term
-
-    # Kill focused window
-    bindsym $mod+Shift+q kill
-
-    # Start your launcher
-    bindsym $mod+d exec $menu
-
-   # Start an explorer
-    bindsym $mod+x exec $explorer
-
-   # Start a program monitor 
-    bindsym $mod+b exec $monitor
-
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
-    floating_modifier $mod normal
-
-    # Reload the configuration file
-    bindsym $mod+Shift+c reload
-
-    # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit wayland?' -B 'Yes' 'swaymsg exit'
-#
-# Moving around:
-#
-    # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
-    bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
-    bindsym $mod+Right focus right
-
-    # Move the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
-    # Ditto, with arrow keys
-    bindsym $mod+Shift+Left move left
-    bindsym $mod+Shift+Down move down
-    bindsym $mod+Shift+Up move up
-    bindsym $mod+Shift+Right move right
-#
-# Workspaces:
-#
-    # Switch to workspace
-    bindsym $mod+1 workspace number 1
-    bindsym $mod+2 workspace number 2
-    bindsym $mod+3 workspace number 3
-    bindsym $mod+4 workspace number 4
-    bindsym $mod+5 workspace number 5
-    bindsym $mod+6 workspace number 6
-    bindsym $mod+7 workspace number 7
-    bindsym $mod+8 workspace number 8
-    bindsym $mod+9 workspace number 9
-    bindsym $mod+0 workspace number 10
-    # Move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1
-    bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9
-    bindsym $mod+Shift+0 move container to workspace number 10
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
-#
-# Layout stuff:
-#
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
-    # bindsym $mod+b splith
-    # bindsym $mod+v splitv
-
-    # Switch the current container between different layout styles
-    bindsym $mod+s layout stacking
-    bindsym $mod+w layout tabbed
-    bindsym $mod+e layout toggle split
-
-    # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
-
-    # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
-
-    # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
-
-    # Move focus to the parent container
-    bindsym $mod+a focus parent
-#
-# Scratchpad:
-#
-    # Sway has a "scratchpad", which is a bag of holding for windows.
-    # You can send windows there and get them back later.
-
-    # Move the currently focused window to the scratchpad
-    bindsym $mod+Shift+minus move scratchpad
-
-    # Show the next scratchpad window or hide the focused scratchpad window.
-    # If there are multiple scratchpad windows, this command cycles through them.
-    bindsym $mod+minus scratchpad show
-#
-# Resizing containers:
-#
-mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
-
-    # Ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
-
-    # Return to default mode
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+	xkb_layout us
 }
 
-#
-# Status Bar:
-#
-# `man 5 sway-bar`
-set $bar bar
+# Output
 
-$bar {
-    #position top
+output $output1 {
+	resolution 1920x1080@75Hz
+	position 0 0
 
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    #status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
-
-    #colors {
-        #statusline #ffffff
-        #background #323232
-        #inactive_workspace #32323200 #32323200 #5c5c5c
-    #}
+	#background somefile stretch
+	#max_render_time off
+	adaptive_sync on
 }
 
-# Other Keybinds
+# Misc
 
-bindsym Print exec grim -t png -g "$(slurp -d)" - | wl-copy
+## Reload the config, may pause
+bindsym $mod+Shift+c reload
 
-bindsym $mod+Print exec grim -t png - | wl-copy
+## Exit sway
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit wayland?' -B 'Yes' 'swaymsg exit'
 
-# Visual
-# default_border pixel 2
-# gaps outer 4
+xwayland disable
 
-default_border pixel 0
-gaps outer 0
+# Wannabe sw (prefer ~/.config/sway/sw)
+### exec {
+###	pipewire
+###	pipewire-pulse
+###	wireplumber
+###
 
-# Runtime exec
-
-exec {
-	pipewire
-	pipewire-pulse
-	wireplumber
-}
-
-include /etc/sway/config.d/*
+include @sysconfdir@/sway/config.d/*
