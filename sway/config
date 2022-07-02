@@ -144,11 +144,11 @@ gaps outer 2
 
 input "type:pointer" {
 	accel_profile flat
-	pointer_accel 0.15
+	pointer_accel 0.30
 }
 
 input "type:keyboard" {
-	repeat_delay 200
+	repeat_delay 300
 	repeat_rate 30
 
 	xkb_layout us
