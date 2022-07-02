@@ -1,0 +1,17 @@
+# XDG
+export XDG_SESSION_TYPE=wayland
+
+export XDG_SESSION_DESKTOP=sway
+export XDG_CURRENT_DESKTOP=sway
+export DESKTOP_SESSION=sway
+
+# XKB
+export XKB_DEFAULT_LAYOUT=us
+
+# Misc
+export MOZ_ENABLE_WAYLAND=1
+export GRIM_DEFAULT_DIR=~/.local/share/Pictures/Screenshots
+
+# Start sway
+## It's started this way to avoid the dependency on elogind
+sudo chmod a=rwx /run/seatd.sock && sway
