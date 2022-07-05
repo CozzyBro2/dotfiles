@@ -41,6 +41,7 @@ font Noto Sans Mono 11
 
 ## Your outputs here
 set $output-1 "Unknown 2460G5 0x00002871"
+set $wallpaper-1 ~/.local/share/Pictures/Wallpapers/soowaye.png
 
 # Workspace bindings
 
@@ -95,6 +96,9 @@ bindsym $mod+v split v
 ## Go in/out of fullscreen
 bindsym $mod+f fullscreen toggle
 
+## Toggle a window being floating
+bindsym $mod+Shift+space floating toggle
+
 ## Change focus between tiling / floating windows
 bindsym $mod+Shift+f focus mode_toggle
 
@@ -125,6 +129,8 @@ bindsym $mod+Print		exec $wrap-shoot
 
 # Visuals
 
+#seat - xcursor_theme breeze-dark 24
+
 default_border pixel 2
 default_floating_border pixel 2
 gaps outer 2
@@ -150,19 +156,18 @@ input "type:pointer" {
 input "type:keyboard" {
 	repeat_delay 300
 	repeat_rate 30
-
-	xkb_layout us
 }
 
 # Output
 
-output $output1 {
+exec swaybg -i $wallpaper-1 -m stretch -o *
+
+output * {
 	resolution 1920x1080@75Hz
 	position 0 0
 
-	#background somefile stretch
 	#max_render_time off
-	adaptive_sync on
+	#adaptive_sync off
 }
 
 # Misc
@@ -173,13 +178,10 @@ bindsym $mod+Shift+c reload
 ## Exit sway
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit wayland?' -B 'Yes' 'swaymsg exit'
 
-xwayland disable
-
-# Wannabe sw (prefer ~/.config/sway/sw)
-### exec {
-###	pipewire
-###	pipewire-pulse
-###	wireplumber
-###
+exec {
+	pipewire
+	pipewire-pulse
+	wireplumber
+}
 
 include @sysconfdir@/sway/config.d/*
