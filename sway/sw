@@ -1,9 +1,12 @@
 # XDG
 export XDG_SESSION_TYPE=wayland
 
-export XDG_SESSION_DESKTOP=sway
-export XDG_CURRENT_DESKTOP=sway
-export DESKTOP_SESSION=sway
+SW_DESIRED=/opt/wayfire/bin/startwayfire
+#SW_DESIRED=sway
+
+export XDG_SESSION_DESKTOP=$SW_DESIRED
+export XDG_CURRENT_DESKTOP=$SW_DESIRED
+export DESKTOP_SESSION=$SW_DESIRED
 
 # XCB
 export XCB_KEYBOARD_LAYOUT=us
@@ -17,5 +20,8 @@ export GRIM_DEFAULT_DIR=~/.local/share/Pictures/Screenshots
 # Associations
 export EDITOR=nvim
 
-# Start sway 
-dbus-run-session sway
+# any compositor dependencies that run before it starts
+
+
+# Start wayland comp
+dbus-run-session $SW_DESIRED
